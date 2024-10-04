@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,9 @@ public class BankAccount {
         this.accountNo = generateAccountNo();
         this.holderName = holderName;
         this.balance = 0.0f;
+
+        ZoneId defaultZone = ZoneId.systemDefault();
+        this.accountStart = Date.from(LocalDate.now().atStartOfDay(defaultZone).toInstant());
 
         if (transactions == null) {
             transactions = new ArrayList<>();
@@ -42,7 +46,7 @@ public class BankAccount {
         Random random = new Random();
         String accountNo = "";
 
-        for(int i = 0; i < accountNoLength; i++) {
+        for (int i = 0; i < accountNoLength; i++) {
             int randomValue = startAsciiNo + (int) (random.nextFloat() * (endAsciiNo - startAsciiNo + 1));
 
             accountNo = accountNo + (char) randomValue;
@@ -55,7 +59,7 @@ public class BankAccount {
     }
 
     // public void setAccountNo(String accountNo) {
-    //     this.accountNo = accountNo;
+    // this.accountNo = accountNo;
     // }
 
     public String getHolderName() {
@@ -63,7 +67,7 @@ public class BankAccount {
     }
 
     // public void setHolderName(String holderName) {
-    //     this.holderName = holderName;
+    // this.holderName = holderName;
     // }
 
     public float getBalance() {
@@ -79,7 +83,12 @@ public class BankAccount {
     }
 
     public void setIsClosed(Boolean isClosed) {
-        this.isClosed = isClosed;
+
+        if (isClosed) {
+            ZoneId defaultZone = ZoneId.systemDefault();
+            this.accountStart = Date.from(LocalDate.now().atStartOfDay(defaultZone).toInstant());
+            this.isClosed = isClosed;
+        }
     }
 
     public Date getAccountStart() {
@@ -131,6 +140,8 @@ public class BankAccount {
         if (!this.isClosed) {
             if (amount <= this.balance) {
                 this.balance = this.balance - amount;
+
+                transactions.add("withdraw amount $" + amount + " at " + LocalDate.now().toString());
             } else {
                 throw new IllegalArgumentException("Withdrawal amount cannot be more than your bank balance.");
             }
@@ -139,5 +150,4 @@ public class BankAccount {
         }
     }
 
-    
 }

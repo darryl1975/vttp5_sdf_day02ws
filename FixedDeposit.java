@@ -3,11 +3,25 @@ public class FixedDeposit extends BankAccount {
     private float interest;
     private Integer duration;
 
-    public FixedDeposit(String holderName) {
-        super(holderName);
+    public FixedDeposit(String holderName, float balance) {
+        super(holderName, balance);
 
         this.interest = 3.0f;
         this.duration = 6;
+    }
+
+    public FixedDeposit(String holderName, float balance, float interest) {
+        super(holderName, balance);
+
+        this.interest = interest;
+        this.duration = 6;
+    }
+
+    public FixedDeposit(String holderName, float balance, float interest, Integer duration) {
+        super(holderName, balance);
+
+        this.interest = interest;
+        this.duration = duration;
     }
 
     public float getInterest() {
